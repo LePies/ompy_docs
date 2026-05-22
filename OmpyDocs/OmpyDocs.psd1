@@ -1,5 +1,5 @@
 @{
-    ModuleVersion     = '1.2.0'
+    ModuleVersion     = '1.3.0'
     GUID              = 'a3f8c2e1-9b4d-4f6a-8e2c-1d5b7a9e0f3c'
     Author            = 'Oliver Mohr'
     CompanyName       = 'Unknown'

@@ -1,114 +1,188 @@
 # ompy_docs
 
-PowerShell module to bootstrap Python projects with the [Astral](https://astral.sh) stack (**uv**, **ruff**, **ty**) and **Sphinx + Furo** documentation (styled API reference, todo-list directive, examples folder).
+Bootstrap Python projects with the [Astral](https://astral.sh) stack (**uv**, **ruff**, **ty**) and **Sphinx + Furo** documentation (styled API reference, todo-list directive, Sphinx-Gallery examples).
+
+Works on **Windows (PowerShell or CMD)**, **Linux**, and **macOS (bash)**.
 
 ## Prerequisites
 
-- Windows PowerShell 5.1+ (PowerShell 7+ also works)
 - [Git](https://git-scm.com/)
-- **[uv](https://docs.astral.sh/uv/getting-started/installation/)** on `PATH`:
+- **[uv](https://docs.astral.sh/uv/getting-started/installation/)** on `PATH`
+- **Python 3** on `PATH` (for bash/CMD wrappers; PowerShell module does not require it)
 
 ```powershell
+# Windows
 winget install astral-sh.uv
-# or: irm https://astral.sh/uv/install.ps1 | iex
 ```
 
-## Install the module
+```bash
+# Linux / macOS
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+## Install
+
+### PowerShell (recommended on Windows)
 
 ```powershell
 git clone https://github.com/LePies/ompy_docs.git
 cd ompy_docs
 .\Install.ps1
 Import-Module OmpyDocs
-Get-Command Init-OmpyDocs
-# or use the alias:
-Get-Command ompy_docs
+Get-Command Init-OmpyDocs   # alias: ompy_docs
 ```
 
-`Install.ps1` copies `OmpyDocs/` and `templates/` into:
+`Install.ps1` copies `OmpyDocs/` and `templates/` to  
+`%USERPROFILE%\Documents\PowerShell\Modules\OmpyDocs\`.
 
-`%USERPROFILE%\Documents\PowerShell\Modules\OmpyDocs\`
-
-### Try without installing
+Try without installing:
 
 ```powershell
 Import-Module .\OmpyDocs\OmpyDocs.psd1 -Force
 ```
 
+### Bash (Linux, macOS, Git Bash, WSL)
+
+```bash
+git clone https://github.com/LePies/ompy_docs.git
+cd ompy_docs
+chmod +x scripts/*.sh
+./scripts/install.sh    # links into ~/.local/bin
+# ensure ~/.local/bin is on PATH
+```
+
+### CMD (Windows Command Prompt)
+
+```cmd
+git clone https://github.com/LePies/ompy_docs.git
+cd ompy_docs
+scripts\install.cmd
+```
+
+Adds wrappers under `%USERPROFILE%\bin` (add to PATH if needed).
+
+### Direct Python CLI (any OS)
+
+From the cloned repo:
+
+```bash
+python scripts/ompy_docs_cli.py init --project-path /path/to/project
+python scripts/ompy_docs_cli.py build --project-path /path/to/project
+```
+
 ## Usage
 
-### New project (greenfield)
+### PowerShell
 
 ```powershell
-mkdir C:\dev\MyLibrary
-Init-OmpyDocs -ProjectPath C:\dev\MyLibrary -ProjectName MyLibrary -UpdateReadme
-# same as: ompy_docs -ProjectPath C:\dev\MyLibrary ...
+Init-OmpyDocs -ProjectPath C:\dev\MyLibrary -ProjectName MyLibrary -IconPath .\logo.png
 cd C:\dev\MyLibrary
-uv sync
-uv run python examples/hello.py
-uv run sphinx-build -b html docs docs/_build
+Build-OmpyDocs
+```
+
+### Bash / Git Bash
+
+```bash
+init-ompy-docs --project-path ./MyLibrary --package-name mylib --icon-path ./logo.png
+cd MyLibrary
+build-ompy-docs
+```
+
+Or from the repo without installing:
+
+```bash
+./scripts/init-ompy-docs.sh --project-path ./MyLibrary
+./scripts/build-ompy-docs.sh --project-path ./MyLibrary
+```
+
+### CMD
+
+```cmd
+init-ompy-docs --project-path .\MyLibrary --package-name mylib
+cd MyLibrary
+build-ompy-docs
+```
+
+Or:
+
+```cmd
+scripts\init-ompy-docs.cmd --project-path .
+scripts\build-ompy-docs.cmd
 ```
 
 ### Existing project (`src/<package>/` already)
 
 ```powershell
-Init-OmpyDocs -ProjectPath C:\dev\ExistingRepo -PackageName mypkg -UpdateReadme
+Init-OmpyDocs -ProjectPath C:\dev\ExistingRepo -PackageName mypkg
 ```
 
-### Docs only
-
-```powershell
-Init-OmpyDocs -ProjectPath C:\dev\ExistingRepo -DocsOnly -PackageName mypkg
+```bash
+init-ompy-docs --project-path ./ExistingRepo --package-name mypkg
 ```
 
-### Parameters
+### Docs only (skip uv bootstrap)
 
-| Parameter | Description |
-|-----------|-------------|
-| `-ProjectPath` | Repository root (default: current directory) |
-| `-ProjectName` | Project display name (default: folder name) |
-| `-PackageName` | Import name under `src/` (auto-detected if omitted) |
-| `-Author` | Docs metadata |
-| `-DocsOnly` | Skip uv / ruff / ty bootstrap |
-| `-SkipExamples` | Do not create `examples/` or `docs/examples.rst` |
-| `-SkipUvSync` | Do not run `uv sync` at end of init |
-| `-UpdateReadme` | Append development/docs section to `README.md` |
-| `-Force` | Overwrite existing `docs/` and `examples/` |
-| `-IconPath` | Package logo (``.png`` / ``.jpg`` / ``.svg``) → ``docs/_static/``, Furo sidebar + home page |
+PowerShell: `-DocsOnly`  
+CLI: `--docs-only`
+
+### Common CLI flags (`init`)
+
+| Flag | Description |
+|------|-------------|
+| `--project-path` | Repository root (default: `.`) |
+| `--project-name` | Display name (default: folder name) |
+| `--package-name` | Import name under `src/` |
+| `--author` | Docs metadata |
+| `--docs-only` | Skip uv / ruff / ty bootstrap |
+| `--skip-examples` | Do not create `examples/` |
+| `--skip-uv-sync` | Do not run `uv sync` at end of init |
+| `--icon-path` | Logo → `docs/_static/`, Furo sidebar + home page |
+| `--force` | Overwrite existing `docs/` and `examples/` |
+
+PowerShell also supports `-UpdateReadme` (not in the Python CLI yet).
 
 New projects include **Sphinx-Gallery**: scripts in `examples/` become the gallery at `docs/auto_examples/`.
 
-## Build docs (one command)
+## Build (one command)
 
-From your project root (after `Init-OmpyDocs`):
+| Shell | Command |
+|-------|---------|
+| PowerShell | `Build-OmpyDocs` |
+| bash | `build-ompy-docs` |
+| CMD | `build-ompy-docs` |
 
-```powershell
-Build-OmpyDocs
-```
+Runs `uv sync`, `ruff check`, `ty check`, `sphinx-build`, then opens `docs/_build/index.html` (unless skipped).
 
-This runs `uv sync`, `uv run ruff check .`, `uv run ty check`, `uv run sphinx-build -b html docs docs/_build`, then opens `docs/_build/index.html` in your browser.
-
-Options: `-ProjectPath`, `-SkipRuff`, `-SkipTy`, `-SkipOpenBrowser`.
+Skip steps: PowerShell `-SkipRuff` / `-SkipTy` / `-SkipOpenBrowser`; CLI `--skip-ruff` / `--skip-ty` / `--skip-open-browser`.
 
 ## Daily workflow (manual)
 
-```powershell
+```bash
 uv sync
 uv run ruff check .
-uv run ruff format .
 uv run ty check
 uv run sphinx-build -b html docs docs/_build
-# or: Build-OmpyDocs
+```
+
+On OneDrive or when hardlinks fail:
+
+```bash
+export UV_LINK_MODE=copy   # bash
+set UV_LINK_MODE=copy      # cmd
 ```
 
 ## Repository layout
 
 ```
 ompy_docs/
-  OmpyDocs/           # PowerShell module
-  templates/          # Scaffold copied into target projects
-  examples/           # How to use this tool
-  Install.ps1
+  OmpyDocs/              # PowerShell module
+  scripts/
+    ompy_docs_cli.py     # cross-platform init + build
+    init-ompy-docs.sh / .cmd
+    build-ompy-docs.sh / .cmd
+    install.sh / install.cmd
+  templates/             # scaffold for target projects
+  Install.ps1            # PowerShell module install
 ```
 
 ## Updating
@@ -117,6 +191,11 @@ ompy_docs/
 cd ompy_docs
 git pull
 .\Install.ps1
+```
+
+```bash
+git pull
+./scripts/install.sh
 ```
 
 ## License

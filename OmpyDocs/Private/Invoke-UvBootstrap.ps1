@@ -45,12 +45,88 @@ function Invoke-UvCommand {
     }
 }
 
+function Ensure-PackageSrcLayout {
+    <#
+    .SYNOPSIS
+        Guarantee src/<PackageName>/__init__.py (and py.typed) before uv add/sync builds the project.
+        Repairs partial inits where pyproject.toml exists but the package tree is missing.
+    #>
+    param(
+        [string]$ProjectPath,
+        [string]$ProjectName,
+        [string]$PackageName,
+        [string]$Author,
+        [string]$Version,
+        [string]$TodoRelativePath,
+        [string]$TemplateRoot,
+        [switch]$Force,
+        [switch]$WhatIf
+    )
+
+    if ($WhatIf) {
+        Write-Host "WhatIf: ensure src/$PackageName/__init__.py under $ProjectPath"
+        return
+    }
+
+    $srcRoot = Join-Path $ProjectPath 'src'
+    $pkgDir = Join-Path $srcRoot $PackageName
+    $destInit = Join-Path $pkgDir '__init__.py'
+    $typed = Join-Path $pkgDir 'py.typed'
+
+    if (-not (Test-Path $srcRoot)) {
+        New-Item -ItemType Directory -Path $srcRoot -Force | Out-Null
+    }
+
+    if (Test-Path $srcRoot) {
+        $dirs = @(Get-ChildItem -Path $srcRoot -Directory -ErrorAction SilentlyContinue)
+        if ($dirs.Count -eq 1 -and $dirs[0].Name -ne $PackageName -and -not (Test-Path $pkgDir)) {
+            Move-Item -Path $dirs[0].FullName -Destination $pkgDir
+        }
+    }
+
+    if (-not (Test-Path $pkgDir)) {
+        New-Item -ItemType Directory -Path $pkgDir -Force | Out-Null
+    }
+
+    $initTpl = Join-Path $TemplateRoot 'src\__init__.py.tpl'
+    if (Test-Path $initTpl) {
+        $tokens = Get-ProjectTokens -ProjectPath $ProjectPath -ProjectName $ProjectName `
+            -PackageName $PackageName -Author $Author -Version $Version -TodoRelativePath $TodoRelativePath
+        if (-not (Test-Path $destInit)) {
+            Write-TokenTemplateFile -SourceFile $initTpl -DestFile $destInit -Tokens $tokens -Force:$true | Out-Null
+        }
+        elseif ($Force) {
+            Write-TokenTemplateFile -SourceFile $initTpl -DestFile $destInit -Tokens $tokens -Force:$true | Out-Null
+        }
+    }
+    elseif (-not (Test-Path $destInit)) {
+        @"
+"""$ProjectName package."""
+
+
+def hello() -> str:
+    return "Hello from $PackageName!"
+"@ | Set-Content -Path $destInit -Encoding utf8
+    }
+
+    if (-not (Test-Path $typed)) {
+        New-Item -ItemType File -Path $typed -Force | Out-Null
+    }
+
+    if (-not (Test-Path $destInit)) {
+        throw "Could not create package entry point: $destInit"
+    }
+}
+
 function Invoke-UvBootstrap {
     param(
         [string]$ProjectPath,
         [string]$ProjectName,
         [string]$PackageName,
+        [string]$Author,
+        [string]$Version,
         [string]$PythonVersion,
+        [string]$TodoRelativePath,
         [string]$TemplateRoot,
         [switch]$DocsOnly,
         [switch]$SkipUvSync,
@@ -65,32 +141,13 @@ function Invoke-UvBootstrap {
     $greenfield = -not (Test-Path $pyProject)
 
     if ($greenfield) {
-        # Init in ProjectPath; --name sets the import package under src/ (not the folder name).
         Invoke-UvCommand -Arguments @('init', '--lib', '--name', $PackageName) -WorkingDirectory $ProjectPath -WhatIf:$WhatIf
-        # uv init --lib uses normalized name; ensure package dir matches our PackageName
-        $pkgInit = Join-Path $ProjectPath "src\$PackageName\__init__.py"
-        if (-not $WhatIf) {
-            $uvPkgDir = Get-ChildItem (Join-Path $ProjectPath 'src') -Directory -ErrorAction SilentlyContinue | Select-Object -First 1
-            if ($uvPkgDir -and $uvPkgDir.Name -ne $PackageName) {
-                $old = $uvPkgDir.FullName
-                $new = Join-Path $ProjectPath "src\$PackageName"
-                if (-not (Test-Path $new)) {
-                    Move-Item -Path $old -Destination $new
-                }
-            }
-            $initTpl = Join-Path $TemplateRoot 'src\__init__.py.tpl'
-            if (Test-Path $initTpl) {
-                $tokens = Get-ProjectTokens -ProjectPath $ProjectPath -ProjectName $ProjectName `
-                    -PackageName $PackageName -Author $env:USERNAME -Version '0.1.0' -TodoRelativePath 'todo.md'
-                $destInit = Join-Path $ProjectPath "src\$PackageName\__init__.py"
-                $dir = Split-Path $destInit -Parent
-                if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
-                Write-TokenTemplateFile -SourceFile $initTpl -DestFile $destInit -Tokens $tokens -Force:$Force | Out-Null
-                $typed = Join-Path $dir 'py.typed'
-                if (-not (Test-Path $typed)) { New-Item -ItemType File -Path $typed -Force | Out-Null }
-            }
-        }
     }
+
+    Ensure-PackageSrcLayout -ProjectPath $ProjectPath -ProjectName $ProjectName `
+        -PackageName $PackageName -Author $Author -Version $Version `
+        -TodoRelativePath $TodoRelativePath -TemplateRoot $TemplateRoot `
+        -Force:$Force -WhatIf:$WhatIf
 
     $addDev = @('add', '--dev', 'ruff', 'ty')
     $addDocs = @('add', '--group', 'docs', 'sphinx>=7,<9', 'furo>=2024.1', 'sphinxcontrib-bibtex')

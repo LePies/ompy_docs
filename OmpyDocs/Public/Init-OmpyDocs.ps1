@@ -44,8 +44,9 @@ function Init-OmpyDocs {
 
     if (-not $DocsOnly) {
         $boot = Invoke-UvBootstrap -ProjectPath $ProjectPath -ProjectName $ProjectName `
-            -PackageName $pkgName -PythonVersion $PythonVersion -TemplateRoot $templateRoot `
-            -SkipUvSync:$SkipUvSync -WhatIf:$false -Force:$Force
+            -PackageName $pkgName -Author $Author -Version $Version `
+            -TodoRelativePath $TodoRelativePath -PythonVersion $PythonVersion `
+            -TemplateRoot $templateRoot -SkipUvSync:$SkipUvSync -WhatIf:$false -Force:$Force
         $pkgName = Get-DetectedPackage -ProjectPath $ProjectPath -PackageName $PackageName
     }
     else {

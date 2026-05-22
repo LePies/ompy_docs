@@ -74,6 +74,9 @@ Init-OmpyDocs -ProjectPath C:\dev\ExistingRepo -DocsOnly -PackageName mypkg
 | `-SkipUvSync` | Do not run `uv sync` at end of init |
 | `-UpdateReadme` | Append development/docs section to `README.md` |
 | `-Force` | Overwrite existing `docs/` and `examples/` |
+| `-IconPath` | Package logo (``.png`` / ``.jpg`` / ``.svg``) → ``docs/_static/``, Furo sidebar + home page |
+
+New projects include **Sphinx-Gallery**: scripts in `examples/` become the gallery at `docs/auto_examples/`.
 
 ## Build docs (one command)
 

@@ -150,7 +150,10 @@ function Invoke-UvBootstrap {
         -Force:$Force -WhatIf:$WhatIf
 
     $addDev = @('add', '--dev', 'ruff', 'ty')
-    $addDocs = @('add', '--group', 'docs', 'sphinx>=7,<9', 'furo>=2024.1', 'sphinxcontrib-bibtex')
+    $addDocs = @(
+        'add', '--group', 'docs',
+        'sphinx>=7,<9', 'furo>=2024.1', 'sphinxcontrib-bibtex', 'sphinx-gallery>=0.16'
+    )
 
     Invoke-UvCommand -Arguments $addDev -WorkingDirectory $ProjectPath -WhatIf:$WhatIf
     Invoke-UvCommand -Arguments $addDocs -WorkingDirectory $ProjectPath -WhatIf:$WhatIf

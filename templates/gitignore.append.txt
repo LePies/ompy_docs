@@ -3,6 +3,7 @@
 .venv/
 .ruff_cache/
 docs/_build/
+docs/auto_examples/
 __pycache__/
 *.py[cod]
 *$py.class

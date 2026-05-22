@@ -107,12 +107,22 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.mathjax",
     "sphinxcontrib.bibtex",
+    "sphinx_gallery.gen_gallery",
 ]
 templates_path = ["_templates"]
+
+# Sphinx-Gallery: executes scripts in ../examples/ and writes pages under docs/auto_examples/
+sphinx_gallery_conf = {
+    "examples_dirs": ["../examples"],
+    "gallery_dirs": "auto_examples",
+    "filename_pattern": r"/.*",
+    "within_subsection_order": "FileNameSortKey",
+    "capture_repr": (),
+}
 bibtex_bibfiles = ["references.bib"]
 bibtex_default_style = "plain"
 bibtex_reference_style = "author_year"
-exclude_patterns = []
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 nitpicky = False
 
 napoleon_google_docstring = True
@@ -175,7 +185,8 @@ html_theme_options = {
     "sidebar_hide_name": False,
     "navigation_with_keys": True,
 }
-html_favicon = None
+{{HTML_LOGO_LINE}}
+html_favicon = {{HTML_FAVICON}}
 html_show_sourcelink = True
 html_show_sphinx = False
 

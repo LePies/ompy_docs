@@ -12,6 +12,18 @@
   object-fit: contain;
 }
 
+/* Optional package icon on the landing page (Init-OmpyDocs -IconPath) */
+.package-icon-row {
+  display: flex;
+  justify-content: center;
+  margin: 0.5rem 0 1.25rem 0;
+}
+
+.package-icon-row img.package-icon {
+  object-fit: contain;
+  max-height: 96px;
+}
+
 .content .document {
   max-width: 52em;
 }

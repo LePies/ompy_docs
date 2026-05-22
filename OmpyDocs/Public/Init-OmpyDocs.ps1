@@ -18,6 +18,7 @@ function Init-OmpyDocs {
         [switch]$SkipExamples,
         [switch]$SkipUvSync,
         [switch]$UpdateReadme,
+        [string]$IconPath,
         [switch]$Force
     )
 
@@ -56,6 +57,8 @@ function Init-OmpyDocs {
     $tokens = Get-ProjectTokens -ProjectPath $ProjectPath -ProjectName $ProjectName `
         -PackageName $pkgName -Author $Author -Version $Version -TodoRelativePath $TodoRelativePath
 
+    Set-PackageIconTokens -Tokens $tokens -IconPath $IconPath -DocsDir (Join-Path $ProjectPath 'docs') -Force:$Force
+
     $todoPath = Join-Path $ProjectPath $TodoRelativePath
     if (-not (Test-Path $todoPath)) {
         Write-TokenTemplateFile -SourceFile (Join-Path $templateRoot 'todo.md') `
@@ -85,13 +88,6 @@ function Init-OmpyDocs {
         }
         Copy-TokenTemplateTree -SourceDir (Join-Path $templateRoot 'examples') `
             -DestDir $examplesDir -Tokens $tokens -Force:$true
-
-        $exBody = New-ExamplesRstBody -ProjectPath $ProjectPath -PackageName $pkgName
-        $tokens['EXAMPLES_BODY'] = $exBody
-        $exRst = Join-Path $docsDir 'examples.rst'
-        $exTplPath = Join-Path $templateRoot 'docs\examples.rst'
-        $exTpl = [System.IO.File]::ReadAllText($exTplPath)
-        [System.IO.File]::WriteAllText($exRst, (Expand-TokenString -Text $exTpl -Tokens $tokens))
     }
 
     Write-RequirementsDocsMirror -DocsDir $docsDir
@@ -105,7 +101,8 @@ function Init-OmpyDocs {
     Write-Host "Initialized: $ProjectPath" -ForegroundColor Green
     Write-Host "  Package: $pkgName (src/$pkgName/)"
     Write-Host "  Docs:    docs/  ->  docs/_build/index.html"
-    if (-not $SkipExamples) { Write-Host "  Example: uv run python examples/hello.py" }
+    if (-not $SkipExamples) { Write-Host "  Examples: examples/ -> Sphinx-Gallery (docs/auto_examples/)" }
+    if ($IconPath) { Write-Host "  Icon:     docs/_static/package_icon*" }
     Write-Host ""
     Write-Host "Next:"
     Write-Host "  cd `"$ProjectPath`""

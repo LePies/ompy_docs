@@ -6,4 +6,5 @@ Thumbs.db
 
 # Generated fixture runs (local testing)
 fixtures/existing-lib/
+fixtures/gallery-test/
 fixtures/smoke-*/

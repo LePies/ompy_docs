@@ -4,6 +4,8 @@
 {{PROJECT_NAME}}
 ========================================
 
+{{PACKAGE_ICON_RST}}
+
 {{PROJECT_NAME}} — Python library/application documentation.
 
 .. container:: api-cta
@@ -14,7 +16,7 @@ Quick links
 -----------
 
 - :doc:`getting_started` — Environment, tooling, and building docs
-- :doc:`examples` — Runnable example scripts
+- :doc:`auto_examples/index` — Example gallery (Sphinx-Gallery, built from ``examples/``)
 - :doc:`units` — Units and conventions (edit as needed)
 - :doc:`todo` — Project to-do list
 - :doc:`references` — Bibliography
@@ -34,7 +36,7 @@ Contents
    :caption: Documentation
 
    getting_started
-   examples
+   auto_examples/index
    api/index
    units
    todo

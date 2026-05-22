@@ -33,6 +33,7 @@ function Write-RequirementsDocsMirror {
 sphinx>=7.0,<9
 furo>=2024.1
 sphinxcontrib-bibtex>=2.6
+sphinx-gallery>=0.16
 
 "@
     [System.IO.File]::WriteAllText($req, $text)

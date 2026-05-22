@@ -1,4 +1,4 @@
-function Init-PythonProject {
+function Init-OmpyDocs {
     <#
     .SYNOPSIS
         Initialize a Python project with uv, ruff, ty, Sphinx/Furo docs, and examples.
@@ -115,4 +115,4 @@ function Init-PythonProject {
     Write-Host "  uv run sphinx-build -b html docs docs/_build"
 }
 
-Set-Alias -Name Init-PythonSphinxDocs -Value Init-PythonProject
+# Alias ompy_docs is exported from the module manifest.

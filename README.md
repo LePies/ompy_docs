@@ -1,8 +1,6 @@
-# init-python-sphinx-docs
+# ompy_docs
 
 PowerShell module to bootstrap Python projects with the [Astral](https://astral.sh) stack (**uv**, **ruff**, **ty**) and **Sphinx + Furo** documentation (styled API reference, todo-list directive, examples folder).
-
-Built from the documentation setup used in the OM_Master2026 thesis codebase; packaged as a reusable initializer in a **separate repository** from that project.
 
 ## Prerequisites
 
@@ -17,24 +15,24 @@ winget install astral-sh.uv
 
 ## Install the module
 
-From a clone of this repository:
-
 ```powershell
-git clone https://github.com/LePies/init-python-sphinx-docs.git
-cd init-python-sphinx-docs
+git clone https://github.com/LePies/ompy_docs.git
+cd ompy_docs
 .\Install.ps1
-Import-Module Init-PythonProject
-Get-Command Init-PythonProject
+Import-Module OmpyDocs
+Get-Command Init-OmpyDocs
+# or use the alias:
+Get-Command ompy_docs
 ```
 
-`Install.ps1` copies `Init-PythonProject/` and `templates/` into:
+`Install.ps1` copies `OmpyDocs/` and `templates/` into:
 
-`%USERPROFILE%\Documents\PowerShell\Modules\Init-PythonProject\`
+`%USERPROFILE%\Documents\PowerShell\Modules\OmpyDocs\`
 
 ### Try without installing
 
 ```powershell
-Import-Module .\Init-PythonProject\Init-PythonProject.psd1 -Force
+Import-Module .\OmpyDocs\OmpyDocs.psd1 -Force
 ```
 
 ## Usage
@@ -43,33 +41,24 @@ Import-Module .\Init-PythonProject\Init-PythonProject.psd1 -Force
 
 ```powershell
 mkdir C:\dev\MyLibrary
-Init-PythonProject -ProjectPath C:\dev\MyLibrary -ProjectName MyLibrary -UpdateReadme
+Init-OmpyDocs -ProjectPath C:\dev\MyLibrary -ProjectName MyLibrary -UpdateReadme
+# same as: ompy_docs -ProjectPath C:\dev\MyLibrary ...
 cd C:\dev\MyLibrary
 uv sync
 uv run python examples/hello.py
 uv run sphinx-build -b html docs docs/_build
 ```
 
-This creates:
-
-- `pyproject.toml`, `uv.lock`, `.python-version`, `.venv` (after `uv sync`)
-- `src/<package>/` with `py.typed` and a `hello()` stub
-- `examples/hello.py`
-- `docs/` (Sphinx + Furo, API pages auto-scanned from `src/`)
-- `todo.md` (included on the docs home page via `.. todo-list::`)
-
 ### Existing project (`src/<package>/` already)
 
 ```powershell
-Init-PythonProject -ProjectPath C:\dev\ExistingRepo -PackageName mypkg -UpdateReadme
+Init-OmpyDocs -ProjectPath C:\dev\ExistingRepo -PackageName mypkg -UpdateReadme
 ```
-
-Adds uv tooling (unless `-DocsOnly`), docs tree, and examples when missing.
 
 ### Docs only
 
 ```powershell
-Init-PythonProject -ProjectPath C:\dev\ExistingRepo -DocsOnly -PackageName mypkg
+Init-OmpyDocs -ProjectPath C:\dev\ExistingRepo -DocsOnly -PackageName mypkg
 ```
 
 ### Parameters
@@ -86,8 +75,6 @@ Init-PythonProject -ProjectPath C:\dev\ExistingRepo -DocsOnly -PackageName mypkg
 | `-UpdateReadme` | Append development/docs section to `README.md` |
 | `-Force` | Overwrite existing `docs/` and `examples/` |
 
-Alias: `Init-PythonSphinxDocs`
-
 ## Daily workflow
 
 ```powershell
@@ -101,36 +88,19 @@ uv run sphinx-build -b html docs docs/_build
 ## Repository layout
 
 ```
-init-python-sphinx-docs/
-  Init-PythonProject/    # PowerShell module
-  templates/             # Copied into target projects (and shipped with module install)
-  examples/              # Notes for using this tool
+ompy_docs/
+  OmpyDocs/           # PowerShell module
+  templates/          # Scaffold copied into target projects
+  examples/           # How to use this tool
   Install.ps1
 ```
 
 ## Updating
 
 ```powershell
-cd init-python-sphinx-docs
+cd ompy_docs
 git pull
 .\Install.ps1
-```
-
-## Publish this tool to GitHub
-
-After cloning, authenticate and create the remote (one-time):
-
-```powershell
-gh auth login
-cd C:\Users\OliverMohr\WorkingFolder\MSc\init-python-sphinx-docs
-gh repo create init-python-sphinx-docs --public --source=. --remote=origin --push
-```
-
-Or create an empty repo on GitHub and:
-
-```powershell
-git remote add origin https://github.com/<your-user>/init-python-sphinx-docs.git
-git push -u origin main
 ```
 
 ## License

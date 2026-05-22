@@ -64,7 +64,7 @@ function Update-GitIgnore {
         [string]$AppendFile
     )
     $gi = Join-Path $ProjectPath '.gitignore'
-    $marker = '# --- init-python-sphinx-docs ---'
+    $marker = '# --- ompy_docs ---'
     $append = [System.IO.File]::ReadAllText($AppendFile)
     if (Test-Path $gi) {
         $existing = [System.IO.File]::ReadAllText($gi)
@@ -86,7 +86,7 @@ function Update-ProjectReadme {
         [switch]$Force
     )
     $readme = Join-Path $ProjectPath 'README.md'
-    $marker = '<!-- init-python-sphinx-docs:development -->'
+    $marker = '<!-- ompy_docs:development -->'
     $block = Expand-TokenString -Text ([System.IO.File]::ReadAllText($TemplateFile)) -Tokens $Tokens
     if (Test-Path $readme) {
         $content = [System.IO.File]::ReadAllText($readme)

@@ -1,5 +1,5 @@
 
-# --- init-python-sphinx-docs ---
+# --- ompy_docs ---
 .venv/
 .ruff_cache/
 docs/_build/

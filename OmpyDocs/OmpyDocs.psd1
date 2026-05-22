@@ -4,11 +4,11 @@
     Author            = 'Oliver Mohr'
     CompanyName       = 'Unknown'
     Copyright         = '(c) 2026 Oliver Mohr. All rights reserved.'
-    Description       = 'Initialize Python projects with uv, ruff, ty, and Sphinx/Furo documentation.'
+    Description       = 'ompy_docs — initialize Python projects with uv, ruff, ty, and Sphinx/Furo documentation.'
     PowerShellVersion = '5.1'
-    RootModule        = 'Init-PythonProject.psm1'
-    FunctionsToExport = @('Init-PythonProject')
-    AliasesToExport   = @('Init-PythonSphinxDocs')
+    RootModule        = 'OmpyDocs.psm1'
+    FunctionsToExport = @('Init-OmpyDocs')
+    AliasesToExport   = @('ompy_docs')
     VariablesToExport = @()
     CmdletsToExport   = @()
 }

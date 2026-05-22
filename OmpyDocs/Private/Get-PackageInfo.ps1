@@ -70,5 +70,5 @@ function Get-ModuleTemplateRoot {
     if (Test-Path (Join-Path $repoRoot 'templates')) {
         return Join-Path $repoRoot 'templates'
     }
-    throw "Cannot find templates/ (expected next to Init-PythonProject module or repo root)."
+    throw "Cannot find templates/ (expected next to OmpyDocs module or repo root)."
 }

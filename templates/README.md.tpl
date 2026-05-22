@@ -1,6 +1,6 @@
 # {{PROJECT_NAME}}
 
-Python project initialized with [init-python-sphinx-docs](https://github.com/LePies/init-python-sphinx-docs) (uv, ruff, ty, Sphinx + Furo).
+Python project initialized with [ompy_docs](https://github.com/LePies/ompy_docs) (uv, ruff, ty, Sphinx + Furo).
 
 ## Development
 
@@ -26,4 +26,4 @@ uv run sphinx-build -b html docs docs/_build
 
 Open `docs/_build/index.html` in a browser.
 
-<!-- init-python-sphinx-docs:development -->
+<!-- ompy_docs:development -->

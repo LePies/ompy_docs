@@ -5,7 +5,7 @@ function New-ExamplesRstBody {
     )
     $examplesDir = Join-Path $ProjectPath 'examples'
     if (-not (Test-Path $examplesDir)) {
-        return "No ``examples/`` directory yet. Add scripts and re-run ``Init-PythonProject`` or edit this page."
+        return "No ``examples/`` directory yet. Add scripts and re-run ``Init-OmpyDocs`` or edit this page."
     }
 
     $scripts = Get-ChildItem -Path $examplesDir -Filter '*.py' -File |

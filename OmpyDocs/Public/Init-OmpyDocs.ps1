@@ -113,7 +113,7 @@ function Init-OmpyDocs {
     elseif (-not $DocsOnly) { Write-Host "  uv sync" }
     Write-Host "  uv run ruff check ."
     Write-Host "  uv run ty check"
-    Write-Host "  uv run sphinx-build -b html docs docs/_build"
+    Write-Host "  Build-OmpyDocs   # sync, ruff, ty, sphinx-build, open browser"
 }
 
 # Alias ompy_docs is exported from the module manifest.

@@ -20,10 +20,9 @@ uv run python examples/hello.py
 ## Documentation
 
 ```powershell
-uv sync
-uv run sphinx-build -b html docs docs/_build
+Build-OmpyDocs
 ```
 
-Open `docs/_build/index.html` in a browser.
+Or manually: `uv sync`, `uv run ruff check .`, `uv run ty check`, `uv run sphinx-build -b html docs docs/_build` (requires [ompy_docs](https://github.com/LePies/ompy_docs) module for `Build-OmpyDocs`).
 
 <!-- ompy_docs:development -->

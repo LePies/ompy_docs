@@ -36,4 +36,4 @@ if (-not $uv) {
 
 Import-Module (Join-Path $dest 'OmpyDocs.psd1') -Force
 Write-Host "Loaded: OmpyDocs $(Get-Module OmpyDocs | Select-Object -ExpandProperty Version)"
-Write-Host "Command:  Init-OmpyDocs  (alias: ompy_docs)"
+Write-Host "Commands: Init-OmpyDocs (alias: ompy_docs), Build-OmpyDocs"

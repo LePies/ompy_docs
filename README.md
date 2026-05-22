@@ -75,7 +75,19 @@ Init-OmpyDocs -ProjectPath C:\dev\ExistingRepo -DocsOnly -PackageName mypkg
 | `-UpdateReadme` | Append development/docs section to `README.md` |
 | `-Force` | Overwrite existing `docs/` and `examples/` |
 
-## Daily workflow
+## Build docs (one command)
+
+From your project root (after `Init-OmpyDocs`):
+
+```powershell
+Build-OmpyDocs
+```
+
+This runs `uv sync`, `uv run ruff check .`, `uv run ty check`, `uv run sphinx-build -b html docs docs/_build`, then opens `docs/_build/index.html` in your browser.
+
+Options: `-ProjectPath`, `-SkipRuff`, `-SkipTy`, `-SkipOpenBrowser`.
+
+## Daily workflow (manual)
 
 ```powershell
 uv sync
@@ -83,6 +95,7 @@ uv run ruff check .
 uv run ruff format .
 uv run ty check
 uv run sphinx-build -b html docs docs/_build
+# or: Build-OmpyDocs
 ```
 
 ## Repository layout

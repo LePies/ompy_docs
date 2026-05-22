@@ -116,6 +116,23 @@ git pull
 .\Install.ps1
 ```
 
+## Publish this tool to GitHub
+
+After cloning, authenticate and create the remote (one-time):
+
+```powershell
+gh auth login
+cd C:\Users\OliverMohr\WorkingFolder\MSc\init-python-sphinx-docs
+gh repo create init-python-sphinx-docs --public --source=. --remote=origin --push
+```
+
+Or create an empty repo on GitHub and:
+
+```powershell
+git remote add origin https://github.com/<your-user>/init-python-sphinx-docs.git
+git push -u origin main
+```
+
 ## License
 
 MIT — see [LICENSE](LICENSE).

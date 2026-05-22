@@ -1,0 +1,9 @@
+
+# --- init-python-sphinx-docs ---
+.venv/
+.ruff_cache/
+docs/_build/
+__pycache__/
+*.py[cod]
+*$py.class
+.Python

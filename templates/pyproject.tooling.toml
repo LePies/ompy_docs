@@ -1,0 +1,12 @@
+[tool.uv]
+default-groups = ["dev", "docs"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ty]
+# Minimal starter; tighten rules as the project matures.

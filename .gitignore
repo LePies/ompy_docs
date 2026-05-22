@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+
+# Generated fixture runs (local testing)
+fixtures/existing-lib/
+fixtures/smoke-*/

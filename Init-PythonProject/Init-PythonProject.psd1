@@ -1,0 +1,14 @@
+@{
+    ModuleVersion     = '1.0.0'
+    GUID              = 'a3f8c2e1-9b4d-4f6a-8e2c-1d5b7a9e0f3c'
+    Author            = 'Oliver Mohr'
+    CompanyName       = 'Unknown'
+    Copyright         = '(c) 2026 Oliver Mohr. All rights reserved.'
+    Description       = 'Initialize Python projects with uv, ruff, ty, and Sphinx/Furo documentation.'
+    PowerShellVersion = '5.1'
+    RootModule        = 'Init-PythonProject.psm1'
+    FunctionsToExport = @('Init-PythonProject')
+    AliasesToExport   = @('Init-PythonSphinxDocs')
+    VariablesToExport = @()
+    CmdletsToExport   = @()
+}
